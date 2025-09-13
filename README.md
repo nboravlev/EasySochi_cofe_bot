@@ -69,7 +69,7 @@ docker compose up -d --build
 
 ## Структура проекта
 
-
+```
 EasySochi_bot/
 ├── README.md
 ├── bot
@@ -101,7 +101,7 @@ EasySochi_bot/
     ├── postgres_password.txt
     ├── postgres_user.txt
     └── ukassa_token.txt
-
+```
 
 ## Безопасность
  * Конфиденциальные данные (пользователи БД, токены) хранятся через Docker secrets
