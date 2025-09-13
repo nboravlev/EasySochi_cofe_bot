@@ -1,0 +1,50 @@
+# Docker
+*.log
+*.pid
+__pycache__/
+*.pyc
+
+# Python
+.env
+.venv/
+*.sqlite3
+
+# Secrets
+secrets/
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# PostgreSQL
+pgdata/
+postgres_data/
+
+# Docker volumes
+volumes/
+
+
+# виртуальное окружение
+venv/
+.venv/
+
+# файлы среды и токены
+.env
+*.env
+secrets/
+*.pyc
+__pycache__/
+
+# временные файлы IDE
+*.swp
+.vscode/
+.idea/
+
+#alembic
+alembic/versions/
+
+reset_db.py
+
+#Git
+.git
+.ssh

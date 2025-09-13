@@ -1,0 +1,108 @@
+secrets:
+  postgres_user:
+    file: ./secrets/postgres_user.txt
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  postgres_db:
+    file: ./secrets/postgres_db.txt
+  bot_token:
+    file: ./secrets/bot_token.txt
+  ukassa_token:
+    file: ./secrets/ukassa_token.txt
+
+services:
+  db_meow:
+    image: postgres:15
+    container_name: postgres_db_meow
+    restart: always
+    env_file: .env
+    # Add command to use custom config
+    environment:
+      POSTGRES_USER_FILE: /run/secrets/postgres_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_DB_FILE: /run/secrets/postgres_db
+      PGPORT: ${POSTGRES_PORT}
+    ports:
+      - "${POSTGRES_PORT}:5434"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tg_app_net_meow
+    secrets:
+      - postgres_user
+      - postgres_password
+      - postgres_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -p ${POSTGRES_PORT:-5434} -U $(cat /run/secrets/postgres_user) -d $(cat /run/secrets/postgres_db)"]
+      interval: 25s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  bot_meow:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    container_name: tg_bot_meow
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - LOG_LEVEL=INFO
+      - LOG_DIR=/app/logs
+      - ENABLE_LOG_VIEWER=true
+      - PYTHONPATH=/bot
+    volumes:
+        - ./bot:/bot
+        - bot_logs:/app/logs  # Mount logs volume
+    depends_on:
+      db_meow:
+        condition: service_healthy
+    networks:
+      - tg_app_net_meow
+    secrets:
+      - postgres_user
+      - postgres_password
+      - postgres_db
+      - bot_token
+      - ukassa_token
+    entrypoint: ["/bot/entrypoint.sh"]
+    command: ["bot"]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  log-viewer_meow:
+    build: 
+      context: ./log_viewer
+      dockerfile: Dockerfile
+    container_name: log_viewer_meow
+    depends_on:
+      - bot_meow
+    volumes:
+      - bot_logs:/app/logs:ro  # Read-only access to logs
+    ports:
+      - "8000:8000"
+    environment:
+      - LOG_DIR=/app/logs
+    networks:
+      - tg_app_net_meow
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  postgres_data:
+  bot_logs:
+
+networks:
+  tg_app_net_meow:
+    driver: bridge
