@@ -18,10 +18,10 @@ async def check_db(context):
         async with get_async_session() as session:
             await session.execute(text("SELECT 1"))
         status_ok = True
-        logger.info("🫥 DB_prod_rent check passed")
+        logger.info("🫥 DB_prod_cofebot check passed")
     except Exception as e:
         status_ok = False
-        logger.error(f"❌ DB_prod_rent check failed: {e}")
+        logger.error(f"❌ DB_prod_cofebot check failed: {e}")
 
     # ВСЕГДА отправляем статус, без проверки на изменение
     text_msg = (

@@ -176,7 +176,7 @@ async def handle_size_selection(update: Update, context: ContextTypes.DEFAULT_TY
 
             if not session_id:
                 # создаём новую сессию
-                new_session = Session(tg_user_id=tg_user_id, last_action={"event": "order_started"})
+                new_session = Session(tg_user_id=tg_user_id, role_id = 1,last_action={"event": "order_started"})
                 session.add(new_session)
                 await session.flush()  # получаем id новой сессии
                 session_id = new_session.id

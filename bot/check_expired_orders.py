@@ -11,7 +11,7 @@ ORDER_STATUS_DRAFT = 8      # "черновик"
 ORDER_STATUS_EXPIRED = 7    # "время истекло"
 
 
-@log_function_call(action="check_expired_booking")
+@log_function_call(action="check_expired_orders")
 async def check_expired_order(context):
     """Проверка и обработка просроченных заказов"""
     logger = get_logger(__name__)
@@ -108,10 +108,10 @@ async def notify_timeout(bot, order):
     )
 
     logger.info(
-        f"Timeout notifications sent for booking {order.id}",
+        f"Timeout notifications sent for order {order.id}",
         extra={
             "action": "notify_timeout",
-            "booking_id": order.id,
+            "order_id": order.id,
             "guest_chat_id": guest_chat_id
         }
     )

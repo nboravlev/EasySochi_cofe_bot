@@ -100,8 +100,8 @@ async def take_order_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
             f"🔢 Количество: {order.drink_count}\n"
             f"💰 Оплачено: {order.total_price} ₽\n"
             f"💬 Комментарий клиента: {order.customer_comment or '—'}\n"
-            f"👤 Клиент: {order.user.first_name or order.user.username}\n"
-            f"🧑‍💼 Менеджер: {manager.first_name or manager.username}\n"
+            f"👤 Клиент: {order.user.firstname or order.user.username}\n"
+            f"🧑‍💼 Менеджер: {manager.firstname or manager.username}\n"
         )
 
         # новая клавиатура: только "Готов к выдаче"

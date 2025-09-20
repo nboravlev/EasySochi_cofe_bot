@@ -111,7 +111,7 @@ async def successful_payment_handler(update: Update, context: ContextTypes.DEFAU
         f"💰 Оплачено: {order.total_price} ₽\n"
         f"⏰ Создан: {created_local.strftime('%H:%M %d.%m.%Y')}\n"
         f"💬 Комментарий клиента: {order.customer_comment or '—'}\n"
-        f"😺: {order.user.first_name or order.user.username}"
+        f"😺: {order.user.firstname or order.user.username}"
     )
 
     keyboard = InlineKeyboardMarkup([
